@@ -1,5 +1,5 @@
-pandas==2.1.4
-requests==2.31.0
-numpy==1.26.2
-matplotlib==3.8.2
-seaborn==0.13.0 
+pandas
+requests
+numpy
+matplotlib
+seaborn

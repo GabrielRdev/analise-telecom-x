@@ -1,77 +1,131 @@
-# Relatório Final: Análise de Evasão de Clientes (Churn) em uma Empresa de Telecomunicações
+# Análise de Evasão de Clientes (Churn) em Telecom
 
-## 1. Introdução
+![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-2.0+-blue?style=for-the-badge&logo=pandas&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange?style=for-the-badge&logo=jupyter&logoColor=white)
 
-### Objetivo da Análise
+## 1. Visão Geral do Projeto
 
-O presente projeto tem como principal objetivo realizar uma análise exploratória sobre um conjunto de dados de uma empresa de telecomunicações. O foco é identificar os principais fatores que influenciam a decisão de um cliente em cancelar seu contrato, fenômeno conhecido como **Churn** (evasão). Ao compreender os padrões e perfis dos clientes que evadem, a empresa pode desenvolver estratégias mais eficazes para a retenção, aumentando a satisfação e a lucratividade.
+Este repositório contém uma análise de dados completa sobre a evasão de clientes (Churn) em uma empresa fictícia de telecomunicações. O objetivo principal é identificar os fatores que mais contribuem para o cancelamento de serviços, permitindo que a empresa desenvolva estratégias de retenção mais eficazes e direcionadas.
 
-### O Problema do Churn
+O projeto abrange desde a extração de dados brutos de uma API, passando por um rigoroso processo de limpeza e transformação, até a análise exploratória detalhada para a geração de insights acionáveis.
 
-A evasão de clientes é uma das métricas mais críticas para negócios baseados em assinatura, como os de telecomunicações. Adquirir um novo cliente pode custar significativamente mais do que reter um existente. Portanto, entender as causas do churn não é apenas uma questão de análise de dados, mas uma necessidade estratégica para a sustentabilidade e o crescimento do negócio. Esta análise busca fornecer insights para ajudar a reduzir essa taxa de evasão.
+## 2. O Problema de Negócio
 
-## 2. Limpeza e Tratamento de Dados
+A taxa de Churn é uma métrica vital para empresas de serviços por assinatura. Um alto índice de evasão impacta diretamente a receita e aumenta os custos, já que adquirir um novo cliente é consideravelmente mais caro do que manter um existente. Compreender os motivos que levam um cliente a sair é o primeiro passo para criar ações proativas que aumentem a lealdade e o valor do ciclo de vida do cliente (LTV).
 
-Para garantir a qualidade e a consistência da análise, os dados brutos passaram por um processo de extração, limpeza e transformação. As seguintes etapas foram executadas:
+## 3. Estrutura de Pastas
 
-1.  **Extração dos Dados**: Os dados foram inicialmente extraídos de uma API e carregados em um DataFrame do Pandas.
-2.  **Normalização de Colunas**: Colunas que continham dados aninhados (estruturas JSON dentro de células) foram desmembradas, criando novas colunas e tornando a informação acessível.
-3.  **Tratamento de Valores Ausentes**: Foi identificado que a coluna `Contas_Totais` possuia valores ausentes para clientes novos (com 0 meses de contrato). Esses valores foram substituídos por `0`, refletindo a realidade de que ainda não houve cobrança total.
-4.  **Correção de Tipos de Dados**: As colunas foram convertidas para os tipos de dados apropriados (numérico, categórico, etc.) para permitir cálculos e visualizações corretas. Por exemplo, `Contas_Totais` foi convertida para o tipo numérico após o tratamento de valores ausentes.
-5.  **Codificação de Variáveis Binárias**: Colunas com respostas "Yes" e "No" (como `Evasao`, `Parceiro`, `Dependentes`, `Servico_Telefone`) foram convertidas para o formato binário `1` e `0`, respectivamente. Isso facilita a análise quantitativa e a aplicação de modelos de machine learning no futuro.
-6.  **Renomeação de Colunas**: Para facilitar a compreensão e a apresentação dos resultados, todas as colunas foram renomeadas para o português (ex: `Churn` para `Evasao`, `tenure` para `Meses_Contrato`).
-7.  **Engenharia de Features**: Foi criada a coluna `Contas_Diarias` a partir da divisão de `Contas_Totais` por `Meses_Contrato` (considerando 30 dias por mês), buscando novas perspectivas sobre os gastos dos clientes.
-8.  **Salvamento dos Dados Tratados**: Ao final do processo, o DataFrame limpo e transformado foi salvo em um arquivo `TelecomX-processed.csv`, garantindo que a etapa de análise exploratória pudesse ser executada de forma independente e reprodutível.
+O projeto está organizado da seguinte forma para garantir clareza e reprodutibilidade:
 
-## 3. Análise Exploratória de Dados
+```
+analise-telecom-x/
+├── .venv/                  # Ambiente virtual com as dependências
+├── data/
+│   ├── raw/                # Armazena os dados brutos extraídos da API
+│   │   └── TelecomX_Raw_Data.json
+|   |   |__ TelecomX_Raw_Data.csv
+│   └── processed/          # Armazena os dados limpos e prontos para análise
+│       └── TelecomX-processed.csv
+├── notebooks/
+│   ├── 01-transform-load-telecomx.ipynb  # Notebook para extração e limpeza dos dados
+│   └── 02-analise-telecomx.ipynb   # Notebook para análise e visualização dos dados
+├── .gitignore
+├── README.md               # Documentação do projeto
+└── requirements.txt        # Lista de dependências Python
+```
 
-Com os dados devidamente tratados, iniciamos a análise exploratória para extrair insights.
+## 4. Processo de ELT (Extract, Load, Transform)
 
-### Análise Descritiva Geral
+O fluxo de dados do projeto segue um modelo ELT, onde os dados são primeiro extraídos e carregados em um formato bruto e, em seguida, transformados para a análise. O diagrama abaixo ilustra o processo:
 
-Uma análise estatística inicial com o método `describe()` nos forneceu uma visão geral das variáveis numéricas, incluindo média, desvio padrão, e quartis para colunas como `Meses_Contrato`, `Contas_Mensais` e `Contas_Totais`.
+```mermaid
+graph TD
+    subgraph "Extração e Carga (EL)"
+        A[API Externa] -->|1. Extração via Python| B(1_extracao_e_tratamento.ipynb);
+        B -->|2. Salva dados brutos| C[data/raw/dados_brutos.json];
+    end
 
-### Distribuição da Evasão
+    subgraph "Transformação (T)"
+        C -->|3. Leitura dos dados brutos| B;
+        B -->|Normalização, Limpeza, Feature Eng.| D[DataFrame Pandas Tratado];
+    end
 
-Primeiramente, analisamos a proporção de clientes que evadiram em relação aos que permaneceram. O gráfico de barras mostrou que a base de clientes possui uma taxa de evasão de aproximadamente **26.5%**, um valor considerável que justifica a investigação aprofundada.
+    subgraph "Carga e Análise"
+        D -->|4. Salva dados processados| E[data/processed/dados_limpos.csv];
+        E -->|5. Leitura para Análise| F(2_analise_exploratoria.ipynb);
+        F -->|Geração de Gráficos e Insights| G[Relatório Final];
+    end
+```
 
-_( gráfico de barras da distribuição da variável `Evasao`)_
+**Etapas da Transformação:**
 
-### Evasão por Variáveis Categóricas
+1.  **Normalização:** Expansão de colunas com dados aninhados (JSON).
+2.  **Tratamento de Nulos:** Preenchimento de valores ausentes na coluna `Contas_Totais`.
+3.  **Correção de Tipos:** Conversão de colunas para tipos numéricos e categóricos adequados.
+4.  **Codificação:** Transformação de variáveis categóricas binárias (ex: 'Yes'/'No') em `1`/`0`.
+5.  **Renomeação:** Padronização dos nomes das colunas para o português.
+6.  **Engenharia de Features:** Criação da coluna `Contas_Diarias` para novas perspectivas de análise.
 
-Analisamos a taxa de evasão em relação a diversas características dos clientes e seus contratos:
+## 5. Tecnologias Utilizadas
 
-- **Tipo de Contrato**: A análise revelou que clientes com **contrato mensal** têm uma taxa de evasão drasticamente superior àqueles com contratos de 1 ou 2 anos. Isso sugere que a falta de um compromisso de longo prazo é um forte indicador de risco de churn.
-- **Forma de Pagamento**: Clientes que utilizam **boleto eletrônico** como forma de pagamento apresentaram uma taxa de churn mais elevada em comparação com outras formas, como cartão de crédito ou débito automático.
-- **Serviços Adicionais**: Observou-se que clientes que **não possuem serviços de proteção**, como `Seguranca_Online` e `Backup_Online`, tendem a evadir mais. Isso pode indicar que clientes com mais serviços integrados percebem maior valor e têm maior "aderência" à empresa.
+- **Linguagem:** Python 3.10+
+- **Bibliotecas de Análise:** Pandas, NumPy
+- **Bibliotecas de Visualização:** Matplotlib, Seaborn
+- **Ambiente de Desenvolvimento:** Jupyter Notebook
 
-_(os gráficos de contagem (countplot) comparando a evasão por `Tipo_Contrato`, `Forma_Pagamento`, etc.)_
+## 6. Principais Insights da Análise
 
-### Evasão por Variáveis Numéricas
+A análise exploratória revelou padrões claros no comportamento dos clientes que evadem:
 
-A relação entre as variáveis numéricas e a evasão também trouxe insights importantes:
+- **Tipo de Contrato:** Clientes com **contrato mensal** possuem uma taxa de churn drasticamente maior em comparação com contratos de 1 ou 2 anos.
+- **Tempo de Contrato:** A evasão é muito mais comum nos **primeiros meses** de serviço. A retenção aumenta significativamente com o tempo de permanência do cliente.
+- **Forma de Pagamento:** O pagamento via **boleto eletrônico** está associado a uma maior taxa de churn.
+- **Serviços Adicionais:** Clientes que **não contratam serviços de segurança** (como `Seguranca_Online` e `Backup_Online`) tendem a evadir mais.
 
-- **Meses de Contrato**: Histogramas e boxplots mostraram que a **maioria dos clientes que evadem o faz nos primeiros meses** de contrato. A taxa de churn diminui consideravelmente à medida que o tempo de permanência do cliente aumenta.
-- **Contas Mensais**: Clientes com **contas mensais mais altas** tendem a ter uma taxa de churn maior. Isso é especialmente verdade para o grupo com contrato mensal, onde o valor elevado pode ser um fator decisivo para a busca por alternativas mais baratas.
+## 7. Recomendações Estratégicas
 
-_(Sugestão: Insira aqui os histogramas ou boxplots para `Meses_Contrato` e `Contas_Mensais`, segmentados pela variável `Evasao`)_
+Com base nos insights, as seguintes ações são recomendadas:
 
-## 4. Conclusões e Insights
+1.  **Incentivar Contratos de Longo Prazo:** Criar ofertas e benefícios para migrar clientes do plano mensal para planos anuais.
+2.  **Melhorar o Onboarding:** Implementar um programa de acompanhamento nos primeiros meses para garantir a satisfação e o engajamento do novo cliente.
+3.  **Promover Pacotes de Serviços:** Oferecer pacotes com serviços de segurança e suporte para aumentar o valor percebido e a "aderência" do cliente.
+4.  **Otimizar Formas de Pagamento:** Incentivar a adesão ao débito automático ou cartão de crédito, oferecendo pequenos descontos.
 
-A análise dos dados nos permitiu extrair as seguintes conclusões:
+## 8. Como Executar o Projeto
 
-1.  **O Perfil do Cliente que Evade**: O cliente com maior probabilidade de evasão é aquele com **pouco tempo de casa**, **contrato mensal**, que paga via **boleto eletrônico** e **não possui serviços adicionais de segurança**.
-2.  **Contratos de Longo Prazo são a Chave para a Retenção**: A diferença na taxa de churn entre contratos mensais e anuais/bianuais é o insight mais forte da análise. A fidelização por meio de contratos mais longos é extremamente eficaz.
-3.  **Os Primeiros Meses são Críticos**: A jornada inicial do cliente é um período de alto risco. A falta de engajamento ou problemas não resolvidos no início do relacionamento podem levar a uma saída prematura.
-4.  **Valor Percebido Importa**: Clientes que contratam mais serviços (como segurança e backup) tendem a ficar mais tempo. Isso sugere que quanto mais integrado o cliente está ao ecossistema de produtos da empresa, menor a chance de ele sair.
+Siga os passos abaixo para configurar e executar a análise em seu ambiente local.
 
-## 5. Recomendações
+1.  **Clone o repositório:**
 
-Com base nas conclusões, as seguintes ações estratégicas são recomendadas para a empresa:
+    ```bash
+    git clone https://github.com/GabrielRdev/analise-telecom-x.git
+    cd analise-telecom-x
+    ```
 
-- **Incentivar Contratos de Longo Prazo**: Criar campanhas ativas para migrar clientes de contratos mensais para planos de 1 ou 2 anos, oferecendo descontos, benefícios exclusivos ou upgrades de serviço como incentivo.
-- **Focar na Retenção Inicial (Onboarding)**: Desenvolver um programa de _onboarding_ para novos clientes, com acompanhamento proativo nos primeiros 3 a 6 meses para garantir a satisfação, tirar dúvidas e apresentar os benefícios dos serviços contratados.
-- **Promover Pacotes de Serviços (Bundles)**: Oferecer pacotes que incluam serviços de segurança, backup e suporte técnico premium a preços atrativos. Isso não só aumenta a receita, mas também a "aderência" do cliente, tornando a troca de provedor mais complexa e menos atraente.
-- **Otimizar Formas de Pagamento**: Investigar por que o boleto eletrônico está associado a um churn maior. Pode ser por esquecimento, dificuldade no pagamento ou menor compromisso. Oferecer pequenos descontos para quem adere ao débito automático ou cartão de crédito pode ser uma solução eficaz.
-- **Ações Preditivas**: Utilizar os insights desta análise para construir um modelo de machine learning que preveja a probabilidade de churn para cada cliente. Com isso, a equipe de retenção pode agir de forma proativa nos clientes de maior risco, antes que eles decidam cancelar o serviço.
-  Espero que este relatório detalhado seja útil para a conclusão do seu projeto. Ele estrutura a narrativa da sua análise, conectando os passos técnicos com os insights de negócio.
+2.  **Crie e ative um ambiente virtual:**
+
+    ```bash
+    # Windows
+    python -m venv .venv
+    .\.venv\Scripts\activate
+
+    # Linux / macOS
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
+
+3.  **Instale as dependências:**
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Execute os notebooks:**
+    Inicie o Jupyter Notebook e execute os arquivos na ordem numérica:
+    - `1_extracao_e_tratamento.ipynb`
+    - `2_analise_exploratoria.ipynb`
+
+## 9. Autor
+
+- **Gabriel Ricardo** - GitHub

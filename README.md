@@ -41,8 +41,8 @@ O fluxo de dados do projeto segue um modelo ELT, onde os dados são primeiro ext
 
 ```mermaid
 graph TD
-    subgraph "Extração e Carga (EL)"
-        A[API Externa] -->|1. Extração via Python| B(1_extracao_e_tratamento.ipynb);
+    subgraph "Extração e Carga (E)"
+        A[API Externa] -->|1. Extração via Python| B(01-transform-load-telecomx.ipynb);
         B -->|2. Salva dados brutos| C[data/raw/dados_brutos.json];
     end
 
@@ -51,9 +51,9 @@ graph TD
         B -->|Normalização, Limpeza, Feature Eng.| D[DataFrame Pandas Tratado];
     end
 
-    subgraph "Carga e Análise"
-        D -->|4. Salva dados processados| E[data/processed/dados_limpos.csv];
-        E -->|5. Leitura para Análise| F(2_analise_exploratoria.ipynb);
+    subgraph "Carga e Análise(L)"
+        D -->|4. Salva dados processados| E[data/processed/TelecomX-processed.csv];
+        E -->|5. Leitura para Análise| F0(02-analise-telecomx.ipynb);
         F -->|Geração de Gráficos e Insights| G[Relatório Final];
     end
 ```
@@ -72,7 +72,7 @@ graph TD
 - **Linguagem:** Python 3.10+
 - **Bibliotecas de Análise:** Pandas, NumPy
 - **Bibliotecas de Visualização:** Matplotlib, Seaborn
-- **Ambiente de Desenvolvimento:** Jupyter Notebook
+- **Ambiente de Desenvolvimento:** VSCode
 
 ## 6. Principais Insights da Análise
 

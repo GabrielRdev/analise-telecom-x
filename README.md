@@ -42,7 +42,7 @@ O fluxo de dados do projeto segue um modelo ELT, onde os dados são primeiro ext
 ```mermaid
 graph TD
     subgraph "Extração e Carga (E)"
-        A[API Externa] -->|1. Extração via Python| B(01-transform-load-telecomx.ipynb);
+        A[API Externa] --> 1. Extração via Python B(01-transform-load-telecomx.ipynb);
         B -->|2. Salva dados brutos| C[data/raw/dados_brutos.json];
     end
 

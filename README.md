@@ -19,11 +19,7 @@ A taxa de Churn é uma métrica vital para empresas de serviços por assinatura.
 O projeto está organizado da seguinte forma para garantir clareza e reprodutibilidade:
 
 ```
-├── .venv/                  # Ambiente virtual com as dependências
 ├── data/
-│   ├── raw/                # Armazena os dados brutos extraídos da API
-│   │   └── TelecomX_Raw_Data.json
-|   |   |__ TelecomX_Raw_Data.csv
 │   ├── raw/                # Dados brutos extraídos da API
 │   │   ├── TelecomX_Raw_Data.json
 │   │   └── TelecomX_Raw_Data.csv

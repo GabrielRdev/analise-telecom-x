@@ -40,34 +40,23 @@ O projeto está organizado da seguinte forma para garantir clareza e reprodutibi
 O fluxo de dados do projeto segue um modelo ELT, onde os dados são primeiro extraídos e carregados em um formato bruto e, em seguida, transformados para a análise. O diagrama abaixo ilustra o processo:
 
 ```mermaid
--graph TD
--    subgraph "Extração e Carga (E)"
--        A[API Externa] -->|1. Extração via Python| B(01-transform-load-telecomx.ipynb);
--        B -->|2. Salva dados brutos| C[data/raw/dados_brutos.json];
-+graph TD;
-+    subgraph "1. Extração e Carga (Bruto)";
-+        A[API Externa] -->|Executa extração| B(notebooks/01-transform-load-telecomx.ipynb);
-+        B -->|Salva dados brutos| C[data/raw/TelecomX_Raw_Data.json];
+graph TD;
+    subgraph "1. Extração e Carga (Bruto)";
+        A[API Externa] -->|Executa extração| B(notebooks/01-transform-load-telecomx.ipynb);
+        B -->|Salva dados brutos| C[data/raw/TelecomX_Raw_Data.json];
     end
 
--    subgraph "Transformação (T)"
--        C -->|3. Leitura dos dados brutos| B;
--        B -->|Normalização, Limpeza, Feature Eng.| D[DataFrame Pandas Tratado];
-+    subgraph "2. Transformação";
-+        C -->|Lê dados brutos| B;
-+        B -->|Aplica limpeza e normalização| D[DataFrame Tratado];
+    subgraph "2. Transformação";
+        C -->|Lê dados brutos| B;
+        B -->|Aplica limpeza e normalização| D[DataFrame Tratado];
     end
 
--    subgraph "Carga e Análise(L)"
--        D -->|4. Salva dados processados| E[data/processed/TelecomX-processed.csv];
--        E -->|5. Leitura para Análise| F0(02-analise-telecomx.ipynb);
--        F -->|Geração de Gráficos e Insights| G[Relatório Final];
-+    subgraph "3. Carga (Processado) e Análise";
-+        D -->|Salva dados processados| E[data/processed/TelecomX-processed.csv];
-+        E -->|Lê dados para análise| F(notebooks/02-analise-telecomx.ipynb);
-+        F -->|Gera gráficos e insights| G[reports/relatorio.ipynb];
+    subgraph "3. Carga (Processado) e Análise";
+        D -->|Salva dados processados| E[data/processed/TelecomX-processed.csv];
+        E -->|Lê dados para análise| F(notebooks/02-analise-telecomx.ipynb);
+        F -->|Gera gráficos e insights| G[reports/relatorio.ipynb];
     end
-```
+
 
 **Etapas da Transformação:**
 

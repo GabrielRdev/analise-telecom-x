@@ -134,8 +134,8 @@ Siga os passos abaixo para configurar e executar a análise em seu ambiente loca
 
 4.  **Execute os notebooks:**
     Inicie o Jupyter Notebook e execute os arquivos na ordem numérica:
-    - `1_extracao_e_tratamento.ipynb`
-    - `2_analise_exploratoria.ipynb`
+    - `01-transform-load-telecomx.ipynb`
+    - `02-analise-telecomx.ipynb`
 
 ## 9. Autor
 

@@ -42,19 +42,19 @@ O fluxo de dados do projeto segue um modelo ELT, onde os dados são primeiro ext
 ```mermaid
 graph TD;
     subgraph "1. Extração e Carga (Bruto)";
-        A[API Externa] -->|Executa extração| B(notebooks/01-transform-load-telecomx.ipynb);
-        B -->|Salva dados brutos| C[data/raw/TelecomX_Raw_Data.json];
+        A[notebooks/01-transform-load-telecomx.ipynb] -->|Executa extração| B(Api Externa);
+        A -->|Salva dados brutos| C[data/raw/TelecomX_Raw_Data.json];
     end
 
     subgraph "2. Transformação";
-        C -->|Lê dados brutos| B;
-        B -->|Aplica limpeza e normalização| D[DataFrame Tratado];
+        C -->|Lê dados brutos| A;
+        A -->|Aplica limpeza e normalização| D[notebooks/01-transform-load-telecomx.ipynb];
     end
 
     subgraph "3. Carga (Processado) e Análise";
-        D -->|Salva dados processados| E[data/processed/TelecomX-processed.csv];
-        E -->|Lê dados para análise| F(notebooks/02-analise-telecomx.ipynb);
-        F -->|Gera gráficos e insights| G[reports/relatorio.ipynb];
+        D -->|Salva dados processados| E[processed/TelecomX-processed.csv];
+        E --> F(notebooks/02-analise-telecomx.ipynb);
+        F -->|Lê dados, analisa, faz gráficos e gera um relatório| G[reports/relatorio.ipynb];
     end
 ```
 

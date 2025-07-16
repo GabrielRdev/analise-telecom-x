@@ -56,7 +56,7 @@ graph TD;
         E -->|Lê dados para análise| F(notebooks/02-analise-telecomx.ipynb);
         F -->|Gera gráficos e insights| G[reports/relatorio.ipynb];
     end
-
+```
 
 **Etapas da Transformação:**
 

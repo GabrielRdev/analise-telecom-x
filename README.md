@@ -42,7 +42,7 @@ O fluxo de dados do projeto segue um modelo ELT, onde os dados são primeiro ext
 ```mermaid
 graph TD;
     subgraph "1. Extração e Carga (Bruto)";
-        A[notebooks/01-transform-load-telecomx.ipynb] -->|Executa extração| B(Api Externa);
+        |Executa extração| B(Api Externa) --> A[notebooks/01-transform-load-telecomx.ipynb] ;
         A -->|Salva dados brutos| C[data/raw/TelecomX_Raw_Data.json];
     end
 

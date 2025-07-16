@@ -36,7 +36,6 @@ O projeto está organizado da seguinte forma para garantir clareza e reprodutibi
 │   └── relatorio.ipynb
 ├── .gitignore
 ├── README.md               # Documentação do projeto
-├── README.md               # Documentação do projeto (este arquivo)
 └── requirements.txt
 ```
 

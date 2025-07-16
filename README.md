@@ -37,26 +37,7 @@ O projeto está organizado da seguinte forma para garantir clareza e reprodutibi
 
 ## 4. Processo de ELT (Extract, Load, Transform)
 
-O fluxo de dados do projeto segue um modelo ELT, onde os dados são primeiro extraídos e carregados em um formato bruto e, em seguida, transformados para a análise. O diagrama abaixo ilustra o processo:
-
-```mermaid
-graph TD;
-    subgraph "1. Extração e Carga (Bruto)";
-        |Executa extração| B(Api Externa) --> A[notebooks/01-transform-load-telecomx.ipynb] ;
-        A -->|Salva dados brutos| C[data/raw/TelecomX_Raw_Data.json];
-    end
-
-    subgraph "2. Transformação";
-        C -->|Lê dados brutos| A;
-        A -->|Aplica limpeza e normalização| D[notebooks/01-transform-load-telecomx.ipynb];
-    end
-
-    subgraph "3. Carga (Processado) e Análise";
-        D -->|Salva dados processados| E[processed/TelecomX-processed.csv];
-        E --> F(notebooks/02-analise-telecomx.ipynb);
-        F -->|Lê dados, analisa, faz gráficos e gera um relatório| G[reports/relatorio.ipynb];
-    end
-```
+O fluxo de dados do projeto segue um modelo ELT, onde os dados brutos são extraídos de uma API e carregados em uma pasta `raw` e, em seguida, transformados para a análise e salvo em uma pasta `processed`. De forma que os dados brutos e o dado processado fique separado.
 
 **Etapas da Transformação:**
 
